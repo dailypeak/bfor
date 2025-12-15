@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verifying…</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: "Inter", sans-serif;
+    padding: 20px;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh;
+  }
+  .box {
+    background: #0f172a;
+    padding: 24px 22px;
+    border-radius: 16px;
+    border: 1px solid #1e293b;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+  }
+  .title { font-size: 17px; font-weight: 600; }
+  .sub { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+  .progress-bar {
+    width: 100%; height: 8px; background: #1e293b;
+    border-radius: 99px; margin: 16px 0;
+  }
+  .progress-fill {
+    width: 0%; height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #3b82f6);
+    border-radius: inherit; box-shadow: 0 0 12px #38bdf8;
+    transition: 0.1s linear;
+  }
+</style>
+</head>
+
+<body>
+<div class="box">
+  <div class="title">Verifying your browser…</div>
+  <div class="sub" id="status">Initializing…</div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="fill"></div>
+  </div>
+
+  <div class="sub">Redirecting in <span id="sec">5</span>s</div>
+</div>
+
+<script>
+  const URL_TO = "https://google.com";
+  let time = 5000;
+  const step = 100;
+
+  const fill = document.getElementById("fill");
+  const sec = document.getElementById("sec");
+  const status = document.getElementById("status");
+
+  let elapsed = 0;
+  const timer = setInterval(() => {
+    elapsed += step;
+    const pct = Math.min(elapsed/time, 1);
+    fill.style.width = (pct*100)+"%";
+    sec.textContent = Math.ceil((time - elapsed)/1000);
+
+    if(pct>0.3) status.textContent ="Checking security…";
+    if(pct>0.7) status.textContent ="Finalizing…";
+
+  }, step);
+
+  setTimeout(()=> window.location.href=URL_TO, time);
+</script>
+
+</body>
+</html>

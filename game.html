@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="./assets/img/Gaming Community Logo with Wordmark Style.svg">
+<title>Play Creative Coloring - The Coloring Game for Kids</title>
+<meta name="description" content="Play Creative Coloring: a fun, simple, and safe coloring game for toddlers and kids.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css" />
+<style>
+  body { margin:0; background:#000000; color:#37ffcd; font-family:'Inter',sans-serif; }
+  .game-board { 
+    display:grid; 
+    grid-template-columns: repeat(4, 100px); 
+    grid-gap: 20px; 
+    justify-content:center; 
+    margin:50px auto; 
+  }
+  .card { 
+    width:100px; 
+    height:140px; 
+    background:#1b1f29; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    font-size:48px; 
+    cursor:pointer; 
+    border:4px solid #222832; 
+    color:#fff; 
+    user-select:none;
+  }
+  .card.flipped, .card.matched { background:#3B82F6; color:#000; }
+  h1 { text-align:center; margin-top:20px; }
+  p { text-align:center; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="index.html" aria-label="Home"><img src="assets/img/Gaming Community Logo with Wordmark Style.svg" alt="Creative Coloring icon"><span>Creative Coloring</span></a>
+    <div class="menu" data-nav-menu>
+      <a href="index.html">Home</a>
+      <a href="game.html" >Play Game</a>
+      <a href="leaderboard.html" >Leaderboard</a>
+      <a href="about.html" >About</a>
+      <a href="blog.html" >Blog</a>
+      <a href="faq.html" >FAQ</a>
+      <a href="privacy.html" >Privacy</a>
+      <a href="terms.html" >Terms</a>
+    </div>
+    <div class="right"><a class="btn ghost" data-nav-toggle>Menu</a><a class="btn" href="game.html">Play</a></div>
+  </div>
+</nav>
+
+<h1>Creative Coloring</h1>
+<p>Click on the colors and then the picture to start coloring!</p>
+<div class="game-board" id="gameBoard"></div>
+
+<script>
+(function(){
+  const board = document.getElementById('gameBoard');
+  const symbols = ['🍎','🍌','🍇','🍒','🍉','🥝','🍍','🥥'];
+  let cards = symbols.concat(symbols); // duplicate for pairs
+  let flipped = [];
+  let matchedCount = 0;
+
+  // Shuffle function
+  function shuffle(array){
+    for(let i = array.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  cards = shuffle(cards);
+
+  // Create cards
+  cards.forEach(symbol => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.dataset.symbol = symbol;
+    card.innerText = '';
+    board.appendChild(card);
+
+    card.addEventListener('click', () => {
+      if(card.classList.contains('flipped') || card.classList.contains('matched') || flipped.length === 2) return;
+
+      card.classList.add('flipped');
+      card.innerText = symbol;
+      flipped.push(card);
+
+      if(flipped.length === 2){
+        if(flipped[0].dataset.symbol === flipped[1].dataset.symbol){
+          flipped[0].classList.add('matched');
+          flipped[1].classList.add('matched');
+          matchedCount += 2;
+          flipped = [];
+          if(matchedCount === cards.length){
+            setTimeout(()=> alert('You Won! 🎉'), 300);
+          }
+        } else {
+          setTimeout(()=>{
+            flipped.forEach(c => {
+              c.classList.remove('flipped');
+              c.innerText = '';
+            });
+            flipped = [];
+          }, 1000);
+        }
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
